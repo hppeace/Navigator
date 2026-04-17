@@ -1,0 +1,134 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model MemberProfile {
+  id                      String               @id @default(cuid())
+  employeeId              String?
+  department              String?
+  name                    String
+  gender                  String?
+  birthDate               DateTime?
+  ethnicity               String?
+  hometown                String?
+  politicalStatus         String?
+  partyAge                String?
+  partyRole               String?
+  academicTitle           String?
+  mentorType              String?
+  researchDirection       String?
+  workStartDate           DateTime?
+  schoolEntryDate         DateTime?
+  highestDegree           String?
+  biography               String?
+  talentPrograms          String?
+  idNumber                String?
+  phone                   String?
+  wechat                  String?
+  email                   String?
+  maritalStatus           String?
+  spouseChildren          String?
+  emergencyContact        String?
+  hobbies                 String?
+  partyIntent             String               @default("待考虑")
+  applicationSubmitted    Boolean              @default(false)
+  developmentStage        String?
+  politicalStudyNotes     String?
+  democraticReviewNotes   String?
+  ideologyAttachmentUrl   String?
+  ideologyAttachmentName  String?
+  avatarUrl               String?
+  avatarName              String?
+  createdAt               DateTime             @default(now())
+  updatedAt               DateTime             @updatedAt
+  activities              ActivityRecord[]
+  keyPerformances         KeyPerformance[]
+  careerRecords           CareerRecord[]
+  contacts                ContactPerson[]
+  conversations           ConversationRecord[]
+  issueSuggestions        IssueSuggestion[]
+}
+
+model ActivityRecord {
+  id              String        @id @default(cuid())
+  profileId       String
+  date            DateTime?
+  title           String
+  category        String?
+  description     String?
+  attachmentUrl   String?
+  attachmentName  String?
+  sortOrder       Int           @default(0)
+  createdAt       DateTime      @default(now())
+  profile         MemberProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model KeyPerformance {
+  id              String        @id @default(cuid())
+  profileId       String
+  date            DateTime?
+  title           String
+  description     String?
+  externalLink    String?
+  attachmentUrl   String?
+  attachmentName  String?
+  sortOrder       Int           @default(0)
+  createdAt       DateTime      @default(now())
+  profile         MemberProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model CareerRecord {
+  id          String        @id @default(cuid())
+  profileId   String
+  date        DateTime?
+  title       String
+  description String?
+  sortOrder   Int           @default(0)
+  createdAt   DateTime      @default(now())
+  profile     MemberProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model ContactPerson {
+  id          String        @id @default(cuid())
+  profileId   String
+  role        String
+  name        String?
+  title       String?
+  note        String?
+  sortOrder   Int           @default(0)
+  createdAt   DateTime      @default(now())
+  profile     MemberProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model ConversationRecord {
+  id              String        @id @default(cuid())
+  profileId       String
+  date            DateTime?
+  summary         String
+  confusion       String?
+  actionPlan      String?
+  attachmentUrl   String?
+  attachmentName  String?
+  sortOrder       Int           @default(0)
+  createdAt       DateTime      @default(now())
+  profile         MemberProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model IssueSuggestion {
+  id              String        @id @default(cuid())
+  profileId       String
+  type            String
+  title           String
+  content         String?
+  status          String?
+  attachmentUrl   String?
+  attachmentName  String?
+  sortOrder       Int           @default(0)
+  createdAt       DateTime      @default(now())
+  profile         MemberProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
