@@ -4,8 +4,16 @@ import { FileUploadField } from "@/components/navigator/file-upload-field";
 import { Field, SectionCard } from "@/components/navigator/workspace/primitives";
 import type { UpdateAttachmentFn, UpdateFieldFn } from "@/components/navigator/workspace/types";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import type { MemberDraft } from "@/lib/navigator-shared";
+import {
+  ethnicityOptions,
+  genderOptions,
+  highestDegreeOptions,
+  maritalStatusOptions,
+  politicalStatusOptions,
+  type MemberDraft,
+} from "@/lib/navigator-shared";
 
 type BasicInfoTabProps = {
   draft: MemberDraft;
@@ -36,19 +44,52 @@ export function BasicInfoTab({
             <Input value={draft.name} onChange={(event) => updateField("name", event.target.value)} />
           </Field>
           <Field label="性别">
-            <Input value={draft.gender} onChange={(event) => updateField("gender", event.target.value)} />
+            <Select value={draft.gender} onValueChange={(value) => updateField("gender", value)}>
+              <SelectTrigger className="w-full rounded-2xl border-black/10 bg-slate-50">
+                <SelectValue placeholder="请选择性别" />
+              </SelectTrigger>
+              <SelectContent>
+                {genderOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </Field>
           <Field label="出生年月">
             <Input type="date" value={draft.birthDate} onChange={(event) => updateField("birthDate", event.target.value)} />
           </Field>
           <Field label="民族">
-            <Input value={draft.ethnicity} onChange={(event) => updateField("ethnicity", event.target.value)} />
+            <Select value={draft.ethnicity} onValueChange={(value) => updateField("ethnicity", value)}>
+              <SelectTrigger className="w-full rounded-2xl border-black/10 bg-slate-50">
+                <SelectValue placeholder="请选择民族" />
+              </SelectTrigger>
+              <SelectContent>
+                {ethnicityOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </Field>
           <Field label="籍贯">
             <Input value={draft.hometown} onChange={(event) => updateField("hometown", event.target.value)} />
           </Field>
           <Field label="政治面貌">
-            <Input value={draft.politicalStatus} onChange={(event) => updateField("politicalStatus", event.target.value)} />
+            <Select value={draft.politicalStatus} onValueChange={(value) => updateField("politicalStatus", value)}>
+              <SelectTrigger className="w-full rounded-2xl border-black/10 bg-slate-50">
+                <SelectValue placeholder="请选择政治面貌" />
+              </SelectTrigger>
+              <SelectContent>
+                {politicalStatusOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </Field>
           <Field label="党龄">
             <Input value={draft.partyAge} onChange={(event) => updateField("partyAge", event.target.value)} />
@@ -75,7 +116,18 @@ export function BasicInfoTab({
             <Input type="date" value={draft.schoolEntryDate} onChange={(event) => updateField("schoolEntryDate", event.target.value)} />
           </Field>
           <Field label="最高学历学位">
-            <Input value={draft.highestDegree} onChange={(event) => updateField("highestDegree", event.target.value)} />
+            <Select value={draft.highestDegree} onValueChange={(value) => updateField("highestDegree", value)}>
+              <SelectTrigger className="w-full rounded-2xl border-black/10 bg-slate-50">
+                <SelectValue placeholder="请选择学历学位" />
+              </SelectTrigger>
+              <SelectContent>
+                {highestDegreeOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </Field>
           <Field label="身份证号码" className="xl:col-span-2">
             <Input value={draft.idNumber} onChange={(event) => updateField("idNumber", event.target.value)} />
@@ -123,7 +175,18 @@ export function BasicInfoTab({
             <Input type="email" value={draft.email} onChange={(event) => updateField("email", event.target.value)} />
           </Field>
           <Field label="婚姻状况">
-            <Input value={draft.maritalStatus} onChange={(event) => updateField("maritalStatus", event.target.value)} />
+            <Select value={draft.maritalStatus} onValueChange={(value) => updateField("maritalStatus", value)}>
+              <SelectTrigger className="w-full rounded-2xl border-black/10 bg-slate-50">
+                <SelectValue placeholder="请选择婚姻状况" />
+              </SelectTrigger>
+              <SelectContent>
+                {maritalStatusOptions.map((option) => (
+                  <SelectItem key={option} value={option}>
+                    {option}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </Field>
           <Field label="紧急联系人及联系方式" className="xl:col-span-2">
             <Input

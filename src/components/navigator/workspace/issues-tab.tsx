@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { createEmptyIssue, issueTypeLabels, type IssueType, type MemberDraft } from "@/lib/navigator-shared";
+import { createEmptyIssue, issueStatusOptions, issueTypeLabels, type IssueType, type MemberDraft } from "@/lib/navigator-shared";
 
 type IssuesTabProps = {
   draft: MemberDraft;
@@ -99,15 +99,26 @@ export function IssuesTab({
                   />
                 </Field>
                 <Field label="跟进状态">
-                  <Input
+                  <Select
                     value={item.status}
-                    onChange={(event) =>
+                    onValueChange={(value) =>
                       updateListItem("issueSuggestions", index, (current) => ({
                         ...current,
-                        status: event.target.value,
+                        status: value,
                       }))
                     }
-                  />
+                  >
+                    <SelectTrigger className="w-full rounded-2xl border-black/10 bg-slate-50">
+                      <SelectValue placeholder="请选择状态" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {issueStatusOptions.map((option) => (
+                        <SelectItem key={option} value={option}>
+                          {option}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </Field>
               </div>
 
