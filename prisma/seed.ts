@@ -1,4 +1,5 @@
 import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import bcrypt from "bcryptjs";
 
 import { PrismaClient } from "../src/generated/prisma/client";
 
@@ -16,6 +17,29 @@ async function main() {
   await prisma.keyPerformance.deleteMany();
   await prisma.activityRecord.deleteMany();
   await prisma.memberProfile.deleteMany();
+  await prisma.user.deleteMany();
+
+  // Create admin user
+  const adminPassword = await bcrypt.hash("admin123", 10);
+  await prisma.user.create({
+    data: {
+      employeeId: "admin",
+      password: adminPassword,
+      name: "系统管理员",
+      isAdmin: true,
+    },
+  });
+
+  // Create regular user
+  const userPassword = await bcrypt.hash("user123", 10);
+  await prisma.user.create({
+    data: {
+      employeeId: "LH2026001",
+      password: userPassword,
+      name: "周岚",
+      isAdmin: false,
+    },
+  });
 
   await prisma.memberProfile.create({
     data: {

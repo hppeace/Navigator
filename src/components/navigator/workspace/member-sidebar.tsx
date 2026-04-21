@@ -23,6 +23,7 @@ type MemberSidebarProps = {
   profiles: MemberDraft[];
   activeId: string;
   query: string;
+  isAdmin: boolean;
   onQueryChange: (value: string) => void;
   onCreate: () => void;
   onSelectProfile: (profile: MemberDraft) => void;
@@ -32,6 +33,7 @@ export function MemberSidebar({
   profiles,
   activeId,
   query,
+  isAdmin,
   onQueryChange,
   onCreate,
   onSelectProfile,
@@ -44,26 +46,30 @@ export function MemberSidebar({
             <CardTitle className="text-lg text-slate-900">成员档案库</CardTitle>
             <CardDescription>按成员切换并编辑完整档案。</CardDescription>
           </div>
-          <Button
-            type="button"
-            size="sm"
-            className="bg-[#0f4c5c] text-white hover:bg-[#0b3f4e]"
-            onClick={onCreate}
-          >
-            <UserPlus />
-            新建
-          </Button>
+          {isAdmin && (
+            <Button
+              type="button"
+              size="sm"
+              className="bg-[#0f4c5c] text-white hover:bg-[#0b3f4e]"
+              onClick={onCreate}
+            >
+              <UserPlus />
+              新建
+            </Button>
+          )}
         </div>
 
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
-          <Input
-            value={query}
-            onChange={(event) => onQueryChange(event.target.value)}
-            placeholder="搜索姓名、院系或工号"
-            className="h-10 rounded-2xl border-black/10 bg-slate-50 pl-9"
-          />
-        </div>
+        {isAdmin && (
+          <div className="relative">
+            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-slate-400" />
+            <Input
+              value={query}
+              onChange={(event) => onQueryChange(event.target.value)}
+              placeholder="搜索姓名、院系或工号"
+              className="h-10 rounded-2xl border-black/10 bg-slate-50 pl-9"
+            />
+          </div>
+        )}
       </CardHeader>
 
       <CardContent>

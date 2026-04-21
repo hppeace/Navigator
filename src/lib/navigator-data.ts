@@ -1,4 +1,5 @@
 import { z } from "zod";
+import bcrypt from "bcryptjs";
 
 import { Prisma } from "@/generated/prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -181,6 +182,24 @@ export async function saveMemberDraft(input: unknown) {
         data,
         include: memberProfileInclude,
       });
+
+  // Create user account if this is a new profile
+  if (!existing && data.employeeId) {
+    const existingUser = await prisma.user.findUnique({
+      where: { employeeId: data.employeeId },
+    });
+    if (!existingUser) {
+      const defaultPassword = await bcrypt.hash(data.employeeId, 10);
+      await prisma.user.create({
+        data: {
+          employeeId: data.employeeId,
+          password: defaultPassword,
+          name: data.name,
+          isAdmin: false,
+        },
+      });
+    }
+  }
 
   return serializeProfile(profile);
 }

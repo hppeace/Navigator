@@ -1,6 +1,8 @@
 "use client";
 
 import { useDeferredValue, useState, useTransition } from "react";
+import { signOut } from "next-auth/react";
+import Link from "next/link";
 
 import { BasicInfoTab } from "@/components/navigator/workspace/basic-info-tab";
 import { GrowthTab } from "@/components/navigator/workspace/growth-tab";
@@ -27,9 +29,15 @@ import {
 
 type NavigatorWorkspaceProps = {
   initialProfiles: MemberDraft[];
+  isAdmin: boolean;
+  currentEmployeeId?: string;
 };
 
-export function NavigatorWorkspace({ initialProfiles }: NavigatorWorkspaceProps) {
+export function NavigatorWorkspace({
+  initialProfiles,
+  isAdmin,
+  currentEmployeeId,
+}: NavigatorWorkspaceProps) {
   const [profiles, setProfiles] = useState(initialProfiles);
   const [activeId, setActiveId] = useState(initialProfiles[0]?.id ?? "");
   const [draft, setDraft] = useState<MemberDraft>(() =>
@@ -45,6 +53,7 @@ export function NavigatorWorkspace({ initialProfiles }: NavigatorWorkspaceProps)
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [newMemberName, setNewMemberName] = useState("");
   const [newMemberDepartment, setNewMemberDepartment] = useState("");
+  const [newMemberEmployeeId, setNewMemberEmployeeId] = useState("");
   const [dialogError, setDialogError] = useState("");
   const [isPending, startTransition] = useTransition();
 
@@ -146,6 +155,7 @@ export function NavigatorWorkspace({ initialProfiles }: NavigatorWorkspaceProps)
       setDialogError("");
       setNewMemberName("");
       setNewMemberDepartment("");
+      setNewMemberEmployeeId("");
     }
   }
 
@@ -202,12 +212,17 @@ export function NavigatorWorkspace({ initialProfiles }: NavigatorWorkspaceProps)
   }
 
   function handleCreateMember() {
+    if (!newMemberEmployeeId.trim()) {
+      setDialogError("请先填写工号。");
+      return;
+    }
     if (!newMemberName.trim()) {
       setDialogError("请先填写成员姓名。");
       return;
     }
 
     const nextDraft = createBlankMemberDraft();
+    nextDraft.employeeId = newMemberEmployeeId.trim();
     nextDraft.name = newMemberName.trim();
     nextDraft.department = newMemberDepartment.trim();
     persistProfile(nextDraft, "create");
@@ -218,24 +233,49 @@ export function NavigatorWorkspace({ initialProfiles }: NavigatorWorkspaceProps)
       <div className="navigator-page-grid pointer-events-none absolute inset-0" />
 
       <div className="relative mx-auto flex w-full max-w-[1440px] flex-col gap-6 px-4 py-5 sm:px-6 lg:px-8 lg:py-8">
-        <HeroBanner
-          draft={draft}
-          draftQuestionCount={draftStats.questions}
-          globalStats={globalStats}
-        />
+        <div className="flex items-center justify-between">
+          <div className="text-sm text-slate-600">
+            登录工号：{currentEmployeeId}
+            {isAdmin && <span className="ml-2 rounded bg-[#0f4c5c] px-2 py-0.5 text-xs text-white">管理员</span>}
+          </div>
+          <div className="flex items-center gap-4">
+            {isAdmin && (
+              <Link href="/admin/users" className="text-sm text-[#0f4c5c] hover:underline">
+                用户管理
+              </Link>
+            )}
+            <button
+              onClick={() => signOut({ callbackUrl: "/login" })}
+              className="text-sm text-slate-500 hover:text-slate-700"
+            >
+              退出登录
+            </button>
+          </div>
+        </div>
+
+        {isAdmin && (
+          <HeroBanner
+            draft={draft}
+            draftQuestionCount={draftStats.questions}
+            globalStats={globalStats}
+          />
+        )}
 
         <div className="grid gap-6 xl:grid-cols-[320px_1fr]">
-          <MemberSidebar
-            profiles={filteredProfiles}
-            activeId={activeId}
-            query={query}
-            onQueryChange={setQuery}
-            onCreate={() => {
-              setCreateDialogOpen(true);
-              setDialogError("");
-            }}
-            onSelectProfile={handleSelectProfile}
-          />
+          {isAdmin && (
+            <MemberSidebar
+              profiles={filteredProfiles}
+              activeId={activeId}
+              query={query}
+              isAdmin={isAdmin}
+              onQueryChange={setQuery}
+              onCreate={() => {
+                setCreateDialogOpen(true);
+                setDialogError("");
+              }}
+              onSelectProfile={handleSelectProfile}
+            />
+          )}
 
           <div className="space-y-6">
             <ProfileSummaryCard
@@ -312,11 +352,13 @@ export function NavigatorWorkspace({ initialProfiles }: NavigatorWorkspaceProps)
         open={createDialogOpen}
         name={newMemberName}
         department={newMemberDepartment}
+        employeeId={newMemberEmployeeId}
         error={dialogError}
         isPending={isPending}
         onOpenChange={handleCreateDialogChange}
         onNameChange={setNewMemberName}
         onDepartmentChange={setNewMemberDepartment}
+        onEmployeeIdChange={setNewMemberEmployeeId}
         onSubmit={handleCreateMember}
       />
     </main>

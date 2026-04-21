@@ -16,11 +16,13 @@ type NewMemberDialogProps = {
   open: boolean;
   name: string;
   department: string;
+  employeeId: string;
   error: string;
   isPending: boolean;
   onOpenChange: (open: boolean) => void;
   onNameChange: (value: string) => void;
   onDepartmentChange: (value: string) => void;
+  onEmployeeIdChange: (value: string) => void;
   onSubmit: () => void;
 };
 
@@ -28,11 +30,13 @@ export function NewMemberDialog({
   open,
   name,
   department,
+  employeeId,
   error,
   isPending,
   onOpenChange,
   onNameChange,
   onDepartmentChange,
+  onEmployeeIdChange,
   onSubmit,
 }: NewMemberDialogProps) {
   return (
@@ -51,6 +55,14 @@ export function NewMemberDialog({
         </DialogHeader>
 
         <div className="space-y-5 px-6 py-5">
+          <Field label="工号">
+            <Input
+              value={employeeId}
+              onChange={(event) => onEmployeeIdChange(event.target.value)}
+              placeholder="请输入工号"
+              className="h-11 rounded-2xl border-black/10 bg-white"
+            />
+          </Field>
           <Field label="成员姓名">
             <Input
               value={name}
