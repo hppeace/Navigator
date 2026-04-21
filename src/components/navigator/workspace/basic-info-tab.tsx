@@ -35,7 +35,11 @@ export function BasicInfoTab({
       >
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           <Field label="工号">
-            <Input value={draft.employeeId} onChange={(event) => updateField("employeeId", event.target.value)} />
+            {draft.id ? (
+              <Input value={draft.employeeId} disabled className="bg-slate-100" />
+            ) : (
+              <Input value={draft.employeeId} onChange={(event) => updateField("employeeId", event.target.value)} />
+            )}
           </Field>
           <Field label="所在院系">
             <Input value={draft.department} onChange={(event) => updateField("department", event.target.value)} />
