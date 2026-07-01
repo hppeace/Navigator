@@ -26,6 +26,7 @@ export type CareerDraft = {
   date: string;
   title: string;
   description: string;
+  attachment: AttachmentValue;
 };
 
 export type ContactRole = "school" | "college" | "mentor";
@@ -41,6 +42,7 @@ export type ContactDraft = {
 export type ConversationDraft = {
   id: string;
   date: string;
+  interviewer: string;
   summary: string;
   confusion: string;
   actionPlan: string;
@@ -53,7 +55,8 @@ export type IssueDraft = {
   id: string;
   type: IssueType;
   title: string;
-  content: string;
+  specificIssues: string;
+  needs: string;
   status: string;
   attachment: AttachmentValue;
 };
@@ -78,6 +81,7 @@ export type MemberDraft = {
   highestDegree: string;
   biography: string;
   talentPrograms: string;
+  socialPartTime: string;
   idNumber: string;
   phone: string;
   wechat: string;
@@ -113,8 +117,8 @@ export const developmentStageOptions = [
 ] as const;
 
 export const issueTypeLabels: Record<IssueType, string> = {
-  question: "问题与困惑",
-  suggestion: "需求与建议",
+  question: "困难诉求",
+  suggestion: "发展建议",
 };
 
 export const contactRoleLabels: Record<ContactRole, string> = {
@@ -207,7 +211,6 @@ export const highestDegreeOptions = [
 ] as const;
 
 export const issueStatusOptions = [
-  "待处理",
   "处理中",
   "已解决",
   "暂缓",
@@ -248,6 +251,7 @@ export function createEmptyCareer(): CareerDraft {
     date: "",
     title: "",
     description: "",
+    attachment: createBlankAttachment(),
   };
 }
 
@@ -265,6 +269,7 @@ export function createEmptyConversation(): ConversationDraft {
   return {
     id: "",
     date: "",
+    interviewer: "",
     summary: "",
     confusion: "",
     actionPlan: "",
@@ -277,8 +282,9 @@ export function createEmptyIssue(type: IssueType): IssueDraft {
     id: "",
     type,
     title: "",
-    content: "",
-    status: "",
+    specificIssues: "",
+    needs: "",
+    status: "处理中",
     attachment: createBlankAttachment(),
   };
 }
@@ -304,6 +310,7 @@ export function createBlankMemberDraft(): MemberDraft {
     highestDegree: "",
     biography: "",
     talentPrograms: "",
+    socialPartTime: "",
     idNumber: "",
     phone: "",
     wechat: "",
@@ -319,15 +326,15 @@ export function createBlankMemberDraft(): MemberDraft {
     democraticReviewNotes: "",
     ideologyAttachment: createBlankAttachment(),
     avatar: createBlankAttachment(),
-    activities: [createEmptyActivity()],
-    keyPerformances: [createEmptyPerformance()],
-    careerRecords: [createEmptyCareer()],
+    activities: [],
+    keyPerformances: [],
+    careerRecords: [],
     contacts: [
       createEmptyContact("school"),
       createEmptyContact("college"),
       createEmptyContact("mentor"),
     ],
-    conversations: [createEmptyConversation()],
-    issueSuggestions: [createEmptyIssue("question"), createEmptyIssue("suggestion")],
+    conversations: [],
+    issueSuggestions: [],
   };
 }

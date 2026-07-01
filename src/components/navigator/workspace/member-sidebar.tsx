@@ -1,4 +1,5 @@
-import { Search, UserPlus } from "lucide-react";
+import { useRef, useState } from "react";
+import { Download, Search, Upload, UserPlus } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +28,7 @@ type MemberSidebarProps = {
   onQueryChange: (value: string) => void;
   onCreate: () => void;
   onSelectProfile: (profile: MemberDraft) => void;
+  onImportComplete: () => void;
 };
 
 export function MemberSidebar({
@@ -37,27 +39,117 @@ export function MemberSidebar({
   onQueryChange,
   onCreate,
   onSelectProfile,
+  onImportComplete,
 }: MemberSidebarProps) {
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [importing, setImporting] = useState(false);
+  const [importNotice, setImportNotice] = useState("");
+
+  function handleExport() {
+    const link = document.createElement("a");
+    link.href = "/api/members/export";
+    link.download = "members.xlsx";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  async function handleImportFile(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    setImporting(true);
+    setImportNotice("");
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const response = await fetch("/api/members/import", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = (await response.json()) as {
+        success?: number;
+        errors?: Array<{ row: number; message: string }>;
+        error?: string;
+      };
+
+      if (!response.ok) {
+        setImportNotice(result.error ?? "导入失败");
+        return;
+      }
+
+      const parts: string[] = [];
+      if (result.success) parts.push(`成功导入 ${result.success} 条`);
+      if (result.errors?.length) parts.push(`${result.errors.length} 条跳过`);
+      setImportNotice(parts.join("，") || "导入完成");
+
+      onImportComplete();
+    } catch {
+      setImportNotice("导入失败，请检查网络连接");
+    } finally {
+      setImporting(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+    }
+  }
+
   return (
     <Card className="navigator-panel">
-      <CardHeader className="gap-3">
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <CardTitle className="text-lg text-slate-900">成员档案库</CardTitle>
-            <CardDescription>按成员切换并编辑完整档案。</CardDescription>
-          </div>
+      <CardHeader className="space-y-3">
+        <div className="flex items-center justify-between gap-2">
+          <CardTitle className="text-lg text-slate-900">成员档案库</CardTitle>
           {isAdmin && (
-            <Button
-              type="button"
-              size="sm"
-              className="bg-[#0f4c5c] text-white hover:bg-[#0b3f4e]"
-              onClick={onCreate}
-            >
-              <UserPlus />
-              新建
-            </Button>
+            <div className="flex items-center gap-1 shrink-0">
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept=".xlsx,.xls"
+                className="hidden"
+                onChange={handleImportFile}
+              />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-7 px-2 text-xs gap-1"
+                disabled={importing}
+                onClick={() => fileInputRef.current?.click()}
+              >
+                <Upload />
+                导入
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="h-7 px-2 text-xs gap-1"
+                onClick={handleExport}
+              >
+                <Download />
+                导出
+              </Button>
+              <Button
+                type="button"
+                size="sm"
+                className="h-7 px-2 text-xs gap-1 bg-[#0f4c5c] text-white hover:bg-[#0b3f4e]"
+                onClick={onCreate}
+              >
+                <UserPlus />
+                新建
+              </Button>
+            </div>
           )}
         </div>
+        <CardDescription>按成员切换并编辑完整档案。</CardDescription>
+        {importNotice && (
+          <div className="rounded-xl border border-[#0f4c5c]/10 bg-[#0f4c5c]/5 px-3 py-2 text-xs text-[#0f4c5c]">
+            {importNotice}
+          </div>
+        )}
 
         {isAdmin && (
           <div className="relative">
@@ -104,9 +196,9 @@ export function MemberSidebar({
                     <div className="mt-3 flex flex-wrap gap-2 text-xs">
                       <Badge variant="secondary">{profile.developmentStage || "未设阶段"}</Badge>
                       {questionCount > 0 ? (
-                        <Badge variant="outline">{questionCount} 个待跟进问题</Badge>
+                        <Badge variant="outline">{questionCount} 个待跟进诉求</Badge>
                       ) : (
-                        <Badge variant="outline">问题已归档</Badge>
+                        <Badge variant="outline">诉求已归档</Badge>
                       )}
                     </div>
 

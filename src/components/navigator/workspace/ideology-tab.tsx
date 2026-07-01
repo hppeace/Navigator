@@ -2,7 +2,6 @@ import {
   ClipboardPenLine,
   MessagesSquare,
   Plus,
-  Users,
 } from "lucide-react";
 
 import { FileUploadField } from "@/components/navigator/file-upload-field";
@@ -20,7 +19,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import {
-  contactRoleLabels,
   createEmptyConversation,
   developmentStageOptions,
   partyIntentOptions,
@@ -44,59 +42,12 @@ export function IdeologyTab({
   removeListItem,
   updateTopLevelAttachment,
 }: IdeologyTabProps) {
+  // Check if development stage is full party member or probationary member
+  const isFullOrProbationaryMember =
+    draft.developmentStage === "正式党员" || draft.developmentStage === "中共预备党员";
+
   return (
     <div className="space-y-6">
-      <SectionCard
-        title="三级联系人"
-        description="校级联系人、院系联系人和成长导师信息。"
-        icon={<Users className="text-[#0f4c5c]" />}
-      >
-        <div className="grid gap-4 lg:grid-cols-3">
-          {draft.contacts.map((item, index) => (
-            <div key={item.role} className="rounded-[24px] border border-black/6 bg-white/90 p-4">
-              <p className="text-sm font-medium text-slate-900">{contactRoleLabels[item.role]}</p>
-              <p className="mt-1 text-xs text-slate-500">支持记录姓名、职务以及观察要点。</p>
-              <div className="mt-4 space-y-3">
-                <Field label="姓名">
-                  <Input
-                    value={item.name}
-                    onChange={(event) =>
-                      updateListItem("contacts", index, (current) => ({
-                        ...current,
-                        name: event.target.value,
-                      }))
-                    }
-                  />
-                </Field>
-                <Field label="职务 / 人才称号">
-                  <Input
-                    value={item.title}
-                    onChange={(event) =>
-                      updateListItem("contacts", index, (current) => ({
-                        ...current,
-                        title: event.target.value,
-                      }))
-                    }
-                  />
-                </Field>
-                <Field label="备注">
-                  <Textarea
-                    className="min-h-24"
-                    value={item.note}
-                    onChange={(event) =>
-                      updateListItem("contacts", index, (current) => ({
-                        ...current,
-                        note: event.target.value,
-                      }))
-                    }
-                  />
-                </Field>
-              </div>
-            </div>
-          ))}
-        </div>
-      </SectionCard>
-
       <SectionCard
         title="思想培养进展"
         description="跟踪入党意愿、申请情况、发展阶段与政治理论学习。"
@@ -107,6 +58,7 @@ export function IdeologyTab({
             <Select
               value={draft.partyIntent}
               onValueChange={(value) => updateField("partyIntent", value as MemberDraft["partyIntent"])}
+              disabled={isFullOrProbationaryMember}
             >
               <SelectTrigger className="w-full rounded-2xl border-black/10 bg-slate-50">
                 <SelectValue placeholder="请选择意愿" />
@@ -122,13 +74,14 @@ export function IdeologyTab({
           </Field>
 
           <Field label="是否已递交入党申请书">
-            <div className="flex h-10 items-center justify-between rounded-2xl border border-black/10 bg-slate-50 px-3">
+            <div className={`flex h-10 items-center justify-between rounded-2xl border border-black/10 bg-slate-50 px-3 ${isFullOrProbationaryMember ? "opacity-60" : ""}`}>
               <span className="text-sm text-slate-600">
                 {draft.applicationSubmitted ? "已递交" : "未递交"}
               </span>
               <Switch
                 checked={draft.applicationSubmitted}
                 onCheckedChange={(value) => updateField("applicationSubmitted", value)}
+                disabled={isFullOrProbationaryMember}
               />
             </div>
           </Field>
@@ -136,7 +89,16 @@ export function IdeologyTab({
           <Field label="发展阶段">
             <Select
               value={draft.developmentStage || "__empty"}
-              onValueChange={(value) => updateField("developmentStage", value === "__empty" ? "" : value)}
+              onValueChange={(value) => {
+                const newStage = value === "__empty" ? "" : value;
+                updateField("developmentStage", newStage);
+
+                // Auto-set party intent and application when selecting full/probationary member
+                if (newStage === "正式党员" || newStage === "中共预备党员") {
+                  updateField("partyIntent", "是");
+                  updateField("applicationSubmitted", true);
+                }
+              }}
             >
               <SelectTrigger className="w-full rounded-2xl border-black/10 bg-slate-50">
                 <SelectValue placeholder="请选择阶段" />
@@ -195,20 +157,33 @@ export function IdeologyTab({
             <RecordShell
               key={`conversation-${index}`}
               title={`谈心谈话 ${index + 1}`}
-              onRemove={() => removeListItem("conversations", index, createEmptyConversation)}
+              onRemove={() => removeListItem("conversations", index, createEmptyConversation, `谈心谈话 ${index + 1}`)}
             >
-              <Field label="谈话日期">
-                <Input
-                  type="date"
-                  value={item.date}
-                  onChange={(event) =>
-                    updateListItem("conversations", index, (current) => ({
-                      ...current,
-                      date: event.target.value,
-                    }))
-                  }
-                />
-              </Field>
+              <div className="grid gap-4 md:grid-cols-2">
+                <Field label="谈话日期">
+                  <Input
+                    type="date"
+                    value={item.date}
+                    onChange={(event) =>
+                      updateListItem("conversations", index, (current) => ({
+                        ...current,
+                        date: event.target.value,
+                      }))
+                    }
+                  />
+                </Field>
+                <Field label="谈话人">
+                  <Input
+                    value={item.interviewer}
+                    onChange={(event) =>
+                      updateListItem("conversations", index, (current) => ({
+                        ...current,
+                        interviewer: event.target.value,
+                      }))
+                    }
+                  />
+                </Field>
+              </div>
 
               <div className="grid gap-4 lg:grid-cols-3">
                 <Field label="谈话要点">

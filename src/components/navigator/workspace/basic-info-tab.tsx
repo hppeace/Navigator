@@ -2,11 +2,12 @@ import { Sparkles, Users } from "lucide-react";
 
 import { FileUploadField } from "@/components/navigator/file-upload-field";
 import { Field, SectionCard } from "@/components/navigator/workspace/primitives";
-import type { UpdateAttachmentFn, UpdateFieldFn } from "@/components/navigator/workspace/types";
+import type { UpdateAttachmentFn, UpdateFieldFn, UpdateListItemFn } from "@/components/navigator/workspace/types";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  contactRoleLabels,
   ethnicityOptions,
   genderOptions,
   highestDegreeOptions,
@@ -18,12 +19,14 @@ import {
 type BasicInfoTabProps = {
   draft: MemberDraft;
   updateField: UpdateFieldFn;
+  updateListItem: UpdateListItemFn;
   updateTopLevelAttachment: UpdateAttachmentFn;
 };
 
 export function BasicInfoTab({
   draft,
   updateField,
+  updateListItem,
   updateTopLevelAttachment,
 }: BasicInfoTabProps) {
   return (
@@ -95,8 +98,8 @@ export function BasicInfoTab({
               </SelectContent>
             </Select>
           </Field>
-          <Field label="党龄">
-            <Input value={draft.partyAge} onChange={(event) => updateField("partyAge", event.target.value)} />
+          <Field label="入党时间">
+            <Input type="date" value={draft.partyAge} onChange={(event) => updateField("partyAge", event.target.value)} />
           </Field>
           <Field label="党内职务">
             <Input value={draft.partyRole} onChange={(event) => updateField("partyRole", event.target.value)} />
@@ -115,6 +118,12 @@ export function BasicInfoTab({
           </Field>
           <Field label="参加工作时间">
             <Input type="date" value={draft.workStartDate} onChange={(event) => updateField("workStartDate", event.target.value)} />
+          </Field>
+          <Field label="社会兼职（政府兼职、企业挂职）" className="xl:col-span-3">
+            <Input
+              value={draft.socialPartTime}
+              onChange={(event) => updateField("socialPartTime", event.target.value)}
+            />
           </Field>
           <Field label="入校时间">
             <Input type="date" value={draft.schoolEntryDate} onChange={(event) => updateField("schoolEntryDate", event.target.value)} />
@@ -215,6 +224,57 @@ export function BasicInfoTab({
               onChange={(event) => updateField("hobbies", event.target.value)}
             />
           </Field>
+        </div>
+      </SectionCard>
+
+      <SectionCard
+        title="三级联系人"
+        description="校级联系人、院系联系人和成长导师信息。"
+        icon={<Users className="text-[#0f4c5c]" />}
+      >
+        <div className="grid gap-4 lg:grid-cols-3">
+          {draft.contacts.map((item, index) => (
+            <div key={item.role} className="rounded-[24px] border border-black/6 bg-white/90 p-4">
+              <p className="text-sm font-medium text-slate-900">{contactRoleLabels[item.role]}</p>
+              <p className="mt-1 text-xs text-slate-500">支持记录姓名、职务以及观察要点。</p>
+              <div className="mt-4 space-y-3">
+                <Field label="姓名">
+                  <Input
+                    value={item.name}
+                    onChange={(event) =>
+                      updateListItem("contacts", index, (current) => ({
+                        ...current,
+                        name: event.target.value,
+                      }))
+                    }
+                  />
+                </Field>
+                <Field label="职务 / 人才称号">
+                  <Input
+                    value={item.title}
+                    onChange={(event) =>
+                      updateListItem("contacts", index, (current) => ({
+                        ...current,
+                        title: event.target.value,
+                      }))
+                    }
+                  />
+                </Field>
+                <Field label="备注">
+                  <Textarea
+                    className="min-h-24"
+                    value={item.note}
+                    onChange={(event) =>
+                      updateListItem("contacts", index, (current) => ({
+                        ...current,
+                        note: event.target.value,
+                      }))
+                    }
+                  />
+                </Field>
+              </div>
+            </div>
+          ))}
         </div>
       </SectionCard>
     </div>

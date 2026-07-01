@@ -49,7 +49,7 @@ export function NewMemberDialog({
           <div className="space-y-1">
             <DialogTitle className="text-xl text-slate-900">新建成员档案</DialogTitle>
             <DialogDescription>
-              先录入成员姓名与所属院系，创建后可继续补充成长轨迹、思想动态和问题建议。
+              先录入成员姓名与所属院系，创建后可继续补充成长轨迹、思想动态和发展诉求。
             </DialogDescription>
           </div>
         </DialogHeader>

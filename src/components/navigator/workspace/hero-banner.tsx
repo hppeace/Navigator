@@ -25,7 +25,7 @@ export function HeroBanner({ draft, draftQuestionCount, globalStats }: HeroBanne
             聚合成员画像、成长轨迹与思想动态，形成长期可维护的数字档案。
           </h1>
           <p className="mt-4 max-w-2xl text-base leading-7 text-white/88 sm:text-lg">
-            围绕成员培养、联系帮扶与问题收集，统一沉淀每位成员的关键信息、阶段进展和后续跟进记录。
+            围绕成员培养、联系帮扶与诉求收集，统一沉淀每位成员的关键信息、阶段进展和后续跟进记录。
           </p>
           <div className="mt-5 flex flex-wrap gap-2 text-xs">
             <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-white/86 backdrop-blur-sm">
@@ -35,7 +35,7 @@ export function HeroBanner({ draft, draftQuestionCount, globalStats }: HeroBanne
               思想培养阶段：{draft.developmentStage || "未设置"}
             </span>
             <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1 text-white/86 backdrop-blur-sm">
-              待跟进问题：{draftQuestionCount}
+              待跟进诉求：{draftQuestionCount}
             </span>
           </div>
         </div>
@@ -44,7 +44,7 @@ export function HeroBanner({ draft, draftQuestionCount, globalStats }: HeroBanne
           <HeroStat label="成员档案" value={String(globalStats.members)} hint="已录入成员数" />
           <HeroStat label="活动记录" value={String(globalStats.activities)} hint="成长轨迹总条目" />
           <HeroStat label="谈心谈话" value={String(globalStats.conversations)} hint="思想动态记录" />
-          <HeroStat label="待办问题" value={String(globalStats.pendingQuestions)} hint="需要组织跟进" />
+          <HeroStat label="待办诉求" value={String(globalStats.pendingQuestions)} hint="需要组织跟进" />
         </div>
       </div>
     </section>

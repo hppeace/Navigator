@@ -8,8 +8,8 @@ export function getInitials(name: string) {
   return name.trim().slice(0, 2) || "LH";
 }
 
-export function hasValue(values: string[]) {
-  return values.some((value) => value.trim().length > 0);
+export function hasValue(values: (string | null | undefined)[]) {
+  return values.some((value) => value && value.trim().length > 0);
 }
 
 export function countMeaningfulActivities(profile: MemberDraft) {
@@ -33,8 +33,8 @@ export function countMeaningfulConversations(profile: MemberDraft) {
 export function countOpenQuestions(profile: MemberDraft) {
   return profile.issueSuggestions.filter(
     (item) =>
-      item.type === "question" &&
-      hasValue([item.title, item.content, item.status, item.attachment.url]),
+      item.status !== "已解决" &&
+      hasValue([item.title, item.specificIssues, item.needs]),
   ).length;
 }
 
@@ -52,12 +52,12 @@ export function calculateCompletionRate(profile: MemberDraft) {
     profile.politicalStudyNotes,
   ];
 
-  const completedFields = checks.filter((value) => value.trim().length > 0).length;
+  const completedFields = checks.filter((value) => value && value.trim().length > 0).length;
   const relationFields = profile.contacts.filter((item) => hasValue([item.name, item.title, item.note])).length > 0 ? 1 : 0;
   const activityFields = countMeaningfulActivities(profile) > 0 ? 1 : 0;
   const performanceFields = countMeaningfulPerformances(profile) > 0 ? 1 : 0;
   const conversationFields = countMeaningfulConversations(profile) > 0 ? 1 : 0;
-  const issueFields = profile.issueSuggestions.filter((item) => hasValue([item.title, item.content])).length > 0 ? 1 : 0;
+  const issueFields = profile.issueSuggestions.filter((item) => hasValue([item.title, item.specificIssues, item.needs])).length > 0 ? 1 : 0;
 
   const total = checks.length + 5;
   const completed = completedFields + relationFields + activityFields + performanceFields + conversationFields + issueFields;

@@ -36,6 +36,7 @@ export function GrowthTab({
         title="活动情况记录"
         description="记录工作站活动参与、主题分享、科普活动和志愿服务。"
         icon={<BookOpenText className="text-[#0f4c5c]" />}
+        collapsible
         action={
           <Button type="button" variant="outline" size="sm" onClick={() => appendListItem("activities", createEmptyActivity())}>
             <Plus />
@@ -48,7 +49,7 @@ export function GrowthTab({
             <RecordShell
               key={`activity-${index}`}
               title={`活动记录 ${index + 1}`}
-              onRemove={() => removeListItem("activities", index, createEmptyActivity)}
+              onRemove={() => removeListItem("activities", index, createEmptyActivity, `活动记录 ${index + 1}`)}
             >
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 <Field label="活动日期">
@@ -119,6 +120,7 @@ export function GrowthTab({
         title="关键表现记录"
         description="重点记录重大项目突破、成果转化和急难险重任务中的担当作为。"
         icon={<FlaskConical className="text-[#d97757]" />}
+        collapsible
         action={
           <Button
             type="button"
@@ -136,7 +138,7 @@ export function GrowthTab({
             <RecordShell
               key={`performance-${index}`}
               title={`关键表现 ${index + 1}`}
-              onRemove={() => removeListItem("keyPerformances", index, createEmptyPerformance)}
+              onRemove={() => removeListItem("keyPerformances", index, createEmptyPerformance, `关键表现 ${index + 1}`)}
             >
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 <Field label="时间">
@@ -208,6 +210,7 @@ export function GrowthTab({
         title="职业发展记录"
         description="记录职务职称变化、人才计划和重大项目进展。"
         icon={<BriefcaseBusiness className="text-[#0f4c5c]" />}
+        collapsible
         action={
           <Button type="button" variant="outline" size="sm" onClick={() => appendListItem("careerRecords", createEmptyCareer())}>
             <Plus />
@@ -220,7 +223,7 @@ export function GrowthTab({
             <RecordShell
               key={`career-${index}`}
               title={`职业发展 ${index + 1}`}
-              onRemove={() => removeListItem("careerRecords", index, createEmptyCareer)}
+              onRemove={() => removeListItem("careerRecords", index, createEmptyCareer, `职业发展 ${index + 1}`)}
             >
               <div className="grid gap-4 md:grid-cols-[220px_1fr]">
                 <Field label="时间">
@@ -260,6 +263,17 @@ export function GrowthTab({
                   }
                 />
               </Field>
+
+              <FileUploadField
+                label="佐证材料"
+                value={item.attachment}
+                onChange={(value) =>
+                  updateListItem("careerRecords", index, (current) => ({
+                    ...current,
+                    attachment: value,
+                  }))
+                }
+              />
             </RecordShell>
           ))}
         </div>

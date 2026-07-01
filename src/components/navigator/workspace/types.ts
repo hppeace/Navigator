@@ -24,6 +24,7 @@ export type RemoveListItemFn = <K extends Exclude<EditableListKey, "contacts">>(
   key: K,
   index: number,
   fallbackFactory: () => EditableListItem<K>,
+  label?: string,
 ) => void;
 
 export type UpdateAttachmentFn = (

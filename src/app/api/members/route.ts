@@ -1,9 +1,17 @@
 import { NextResponse } from "next/server";
 import { ZodError } from "zod";
 
+import { auth } from "@/lib/auth";
 import { saveMemberDraft } from "@/lib/navigator-data";
 
 export async function POST(request: Request) {
+  const session = await auth();
+  const user = session?.user as Record<string, unknown> | undefined;
+
+  if (!user?.employeeId) {
+    return NextResponse.json({ error: "请先登录。" }, { status: 401 });
+  }
+
   try {
     const payload = await request.json();
     const profile = await saveMemberDraft(payload);

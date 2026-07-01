@@ -37,6 +37,7 @@ model MemberProfile {
   highestDegree           String?
   biography               String?
   talentPrograms          String?
+  socialPartTime          String?
   idNumber                String?
   phone                   String?
   wechat                  String?
@@ -62,6 +63,7 @@ model MemberProfile {
   contacts                ContactPerson[]
   conversations           ConversationRecord[]
   issueSuggestions        IssueSuggestion[]
+  changeRequests          ProfileChangeRequest[]
 }
 
 model ActivityRecord {
@@ -93,14 +95,16 @@ model KeyPerformance {
 }
 
 model CareerRecord {
-  id          String        @id @default(cuid())
-  profileId   String
-  date        DateTime?
-  title       String
-  description String?
-  sortOrder   Int           @default(0)
-  createdAt   DateTime      @default(now())
-  profile     MemberProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  id              String        @id @default(cuid())
+  profileId       String
+  date            DateTime?
+  title           String
+  description     String?
+  attachmentUrl   String?
+  attachmentName  String?
+  sortOrder       Int           @default(0)
+  createdAt       DateTime      @default(now())
+  profile         MemberProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
 }
 
 model ContactPerson {
@@ -119,6 +123,7 @@ model ConversationRecord {
   id              String        @id @default(cuid())
   profileId       String
   date            DateTime?
+  interviewer     String?
   summary         String
   confusion       String?
   actionPlan      String?
@@ -134,11 +139,40 @@ model IssueSuggestion {
   profileId       String
   type            String
   title           String
-  content         String?
+  specificIssues  String?
+  needs           String?
   status          String?
   attachmentUrl   String?
   attachmentName  String?
   sortOrder       Int           @default(0)
   createdAt       DateTime      @default(now())
   profile         MemberProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model ProfileChangeRequest {
+  id              String        @id @default(cuid())
+  profileId       String
+  requesterId     String
+  requesterName   String
+  status          String        @default("pending") // pending, approved, rejected
+  originalData    String        // JSON string of the original MemberDraft
+  snapshotData    String        // JSON string of the modified MemberDraft
+  rejectReason    String?
+  createdAt       DateTime      @default(now())
+  reviewedAt      DateTime?
+  reviewedBy      String?
+  profile         MemberProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+}
+
+model CollaborationNeed {
+  id              String        @id @default(cuid())
+  authorId        String        // employeeId of the author
+  authorName      String
+  department      String?
+  title           String
+  content         String
+  requirements    String?
+  status          String        @default("open") // open, closed
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 }

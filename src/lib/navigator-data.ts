@@ -42,6 +42,7 @@ const careerSchema = z.object({
   date: dateField,
   title: shortTextField,
   description: textField,
+  attachment: attachmentSchema,
 });
 
 const contactSchema = z.object({
@@ -55,6 +56,7 @@ const contactSchema = z.object({
 const conversationSchema = z.object({
   id: shortTextField,
   date: dateField,
+  interviewer: shortTextField,
   summary: textField,
   confusion: textField,
   actionPlan: textField,
@@ -65,7 +67,8 @@ const issueSchema = z.object({
   id: shortTextField,
   type: z.enum(["question", "suggestion"]),
   title: shortTextField,
-  content: textField,
+  specificIssues: textField,
+  needs: textField,
   status: shortTextField,
   attachment: attachmentSchema,
 });
@@ -90,6 +93,7 @@ export const memberDraftSchema = z.object({
   highestDegree: shortTextField,
   biography: textField,
   talentPrograms: textField,
+  socialPartTime: textField,
   idNumber: shortTextField,
   phone: shortTextField,
   wechat: shortTextField,
@@ -224,6 +228,7 @@ function createProfileWriteInput(draft: MemberDraft) {
     highestDegree: optionalString(draft.highestDegree),
     biography: optionalString(draft.biography),
     talentPrograms: optionalString(draft.talentPrograms),
+    socialPartTime: optionalString(draft.socialPartTime),
     idNumber: optionalString(draft.idNumber),
     phone: optionalString(draft.phone),
     wechat: optionalString(draft.wechat),
@@ -269,11 +274,13 @@ function createProfileWriteInput(draft: MemberDraft) {
     },
     careerRecords: {
       create: draft.careerRecords
-        .filter((item) => hasAnyValue([item.title, item.description, item.date]))
+        .filter((item) => hasAnyValue([item.title, item.description, item.date, item.attachment.url]))
         .map((item, index) => ({
           date: toDate(item.date),
           title: item.title.trim() || `职业发展 ${index + 1}`,
           description: optionalString(item.description),
+          attachmentUrl: optionalString(item.attachment.url),
+          attachmentName: optionalString(item.attachment.name),
           sortOrder: index,
         })),
     },
@@ -288,9 +295,10 @@ function createProfileWriteInput(draft: MemberDraft) {
     },
     conversations: {
       create: draft.conversations
-        .filter((item) => hasAnyValue([item.summary, item.confusion, item.actionPlan, item.date, item.attachment.url]))
+        .filter((item) => hasAnyValue([item.summary, item.confusion, item.actionPlan, item.date, item.interviewer, item.attachment.url]))
         .map((item, index) => ({
           date: toDate(item.date),
+          interviewer: optionalString(item.interviewer),
           summary: item.summary.trim() || `谈心谈话 ${index + 1}`,
           confusion: optionalString(item.confusion),
           actionPlan: optionalString(item.actionPlan),
@@ -301,11 +309,12 @@ function createProfileWriteInput(draft: MemberDraft) {
     },
     issueSuggestions: {
       create: draft.issueSuggestions
-        .filter((item) => hasAnyValue([item.title, item.content, item.status, item.attachment.url]))
+        .filter((item) => hasAnyValue([item.title, item.specificIssues, item.needs, item.status, item.attachment.url]))
         .map((item, index) => ({
           type: item.type,
-          title: item.title.trim() || `${issueTypeLabels[item.type]} ${index + 1}`,
-          content: optionalString(item.content),
+          title: item.title.trim() || `发展诉求 ${index + 1}`,
+          specificIssues: optionalString(item.specificIssues),
+          needs: optionalString(item.needs),
           status: optionalString(item.status),
           attachmentUrl: optionalString(item.attachment.url),
           attachmentName: optionalString(item.attachment.name),
@@ -339,6 +348,7 @@ function serializeProfile(profile: ProfileWithRelations): MemberDraft {
     highestDegree: profile.highestDegree ?? "",
     biography: profile.biography ?? "",
     talentPrograms: profile.talentPrograms ?? "",
+    socialPartTime: profile.socialPartTime ?? "",
     idNumber: profile.idNumber ?? "",
     phone: profile.phone ?? "",
     wechat: profile.wechat ?? "",
@@ -397,6 +407,10 @@ function serializeProfile(profile: ProfileWithRelations): MemberDraft {
             date: toDateInput(item.date),
             title: item.title,
             description: item.description ?? "",
+            attachment: {
+              url: item.attachmentUrl ?? "",
+              name: item.attachmentName ?? "",
+            },
           }))
         : blank.careerRecords,
     contacts: blank.contacts.map((item) => ({
@@ -411,6 +425,7 @@ function serializeProfile(profile: ProfileWithRelations): MemberDraft {
         ? profile.conversations.map((item) => ({
             id: item.id,
             date: toDateInput(item.date),
+            interviewer: item.interviewer ?? "",
             summary: item.summary,
             confusion: item.confusion ?? "",
             actionPlan: item.actionPlan ?? "",
@@ -426,7 +441,8 @@ function serializeProfile(profile: ProfileWithRelations): MemberDraft {
             id: item.id,
             type: item.type === "question" ? "question" : "suggestion",
             title: item.title,
-            content: item.content ?? "",
+            specificIssues: item.specificIssues ?? "",
+            needs: item.needs ?? "",
             status: item.status ?? "",
             attachment: {
               url: item.attachmentUrl ?? "",

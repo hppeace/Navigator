@@ -21,6 +21,7 @@ type ProfileSummaryCardProps = {
   hasChanges: boolean;
   isPending: boolean;
   notice: NoticeState;
+  isAdmin: boolean;
   onReset: () => void;
   onSave: () => void;
 };
@@ -31,6 +32,7 @@ export function ProfileSummaryCard({
   hasChanges,
   isPending,
   notice,
+  isAdmin,
   onReset,
   onSave,
 }: ProfileSummaryCardProps) {
@@ -54,21 +56,18 @@ export function ProfileSummaryCard({
                 </h2>
                 <p className="mt-1 text-sm text-slate-500">
                   {draft.department || "请先填写所在院系"}
-                  {draft.employeeId ? ` · 工号 ${draft.employeeId}` : ""}
+                  {draft.researchDirection ? ` · ${draft.researchDirection}` : ""}
                 </p>
               </div>
 
               <div className="flex flex-wrap gap-2">
-                <Badge className="bg-[#0f4c5c] text-white">{draft.partyIntent}</Badge>
                 <Badge variant="secondary">{draft.developmentStage || "未设置发展阶段"}</Badge>
-                <Badge variant="outline">{draftStats.activities} 条成长记录</Badge>
-                <Badge variant="outline">{draftStats.performances} 条关键表现</Badge>
               </div>
             </div>
           </div>
 
           <div className="flex flex-col gap-3 sm:items-end">
-            <div className="grid grid-cols-2 gap-3 text-sm sm:w-[320px]">
+            <div className="grid grid-cols-2 gap-2 text-sm sm:w-[240px]">
               <SummaryStat label="完整度" value={`${draftStats.completion}%`} icon={<BadgeCheck />} />
               <SummaryStat label="关注事项" value={String(draftStats.questions)} icon={<CircleAlert />} />
             </div>
@@ -85,7 +84,7 @@ export function ProfileSummaryCard({
                 onClick={onSave}
               >
                 <Save />
-                {isPending ? "处理中..." : "保存档案"}
+                {isPending ? "处理中..." : isAdmin ? "保存档案" : "提交修改"}
               </Button>
             </div>
           </div>
