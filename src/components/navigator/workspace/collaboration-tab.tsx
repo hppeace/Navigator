@@ -244,7 +244,7 @@ export function CollaborationTab({
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="flex items-center gap-2">
-                <Handshake className="h-5 w-5 text-[#0f4c5c]" />
+                <Handshake className="h-5 w-5 text-[#a6192e]" />
                 合作需求平台
               </CardTitle>
               <CardDescription>

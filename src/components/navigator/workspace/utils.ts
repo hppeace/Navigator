@@ -26,7 +26,7 @@ export function countMeaningfulPerformances(profile: MemberDraft) {
 
 export function countMeaningfulConversations(profile: MemberDraft) {
   return profile.conversations.filter((item) =>
-    hasValue([item.summary, item.confusion, item.actionPlan, item.date, item.attachment.url]),
+    hasValue([item.summary, item.confusion, item.actionPlan, item.date, item.interviewer, item.location, item.attachment.url]),
   ).length;
 }
 
@@ -53,7 +53,7 @@ export function calculateCompletionRate(profile: MemberDraft) {
   ];
 
   const completedFields = checks.filter((value) => value && value.trim().length > 0).length;
-  const relationFields = profile.contacts.filter((item) => hasValue([item.name, item.title, item.note])).length > 0 ? 1 : 0;
+  const relationFields = profile.contacts.filter((item) => hasValue([item.name, item.title, item.talentTitle])).length > 0 ? 1 : 0;
   const activityFields = countMeaningfulActivities(profile) > 0 ? 1 : 0;
   const performanceFields = countMeaningfulPerformances(profile) > 0 ? 1 : 0;
   const conversationFields = countMeaningfulConversations(profile) > 0 ? 1 : 0;

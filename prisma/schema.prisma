@@ -21,6 +21,7 @@ model MemberProfile {
   id                      String               @id @default(cuid())
   employeeId              String?
   department              String?
+  workspaceRole           String?
   name                    String
   gender                  String?
   birthDate               DateTime?
@@ -37,6 +38,9 @@ model MemberProfile {
   highestDegree           String?
   biography               String?
   talentPrograms          String?
+  majorProjects           String?
+  talentTitles            String?
+  provincialAwards        String?
   socialPartTime          String?
   idNumber                String?
   phone                   String?
@@ -113,6 +117,7 @@ model ContactPerson {
   role        String
   name        String?
   title       String?
+  talentTitle String?
   note        String?
   sortOrder   Int           @default(0)
   createdAt   DateTime      @default(now())
@@ -124,6 +129,7 @@ model ConversationRecord {
   profileId       String
   date            DateTime?
   interviewer     String?
+  location        String?
   summary         String
   confusion       String?
   actionPlan      String?

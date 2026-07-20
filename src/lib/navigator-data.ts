@@ -50,13 +50,14 @@ const contactSchema = z.object({
   role: z.enum(["school", "college", "mentor"]),
   name: shortTextField,
   title: shortTextField,
-  note: textField,
+  talentTitle: shortTextField,
 });
 
 const conversationSchema = z.object({
   id: shortTextField,
   date: dateField,
   interviewer: shortTextField,
+  location: shortTextField,
   summary: textField,
   confusion: textField,
   actionPlan: textField,
@@ -77,6 +78,7 @@ export const memberDraftSchema = z.object({
   id: shortTextField,
   employeeId: shortTextField,
   department: shortTextField,
+  workspaceRole: shortTextField,
   name: shortTextField,
   gender: shortTextField,
   birthDate: dateField,
@@ -93,6 +95,9 @@ export const memberDraftSchema = z.object({
   highestDegree: shortTextField,
   biography: textField,
   talentPrograms: textField,
+  majorProjects: textField,
+  talentTitles: textField,
+  provincialAwards: textField,
   socialPartTime: textField,
   idNumber: shortTextField,
   phone: shortTextField,
@@ -212,6 +217,7 @@ function createProfileWriteInput(draft: MemberDraft) {
   return {
     employeeId: optionalString(draft.employeeId),
     department: optionalString(draft.department),
+    workspaceRole: optionalString(draft.workspaceRole),
     name: draft.name.trim() || "未命名成员",
     gender: optionalString(draft.gender),
     birthDate: toDate(draft.birthDate),
@@ -228,6 +234,9 @@ function createProfileWriteInput(draft: MemberDraft) {
     highestDegree: optionalString(draft.highestDegree),
     biography: optionalString(draft.biography),
     talentPrograms: optionalString(draft.talentPrograms),
+    majorProjects: optionalString(draft.majorProjects),
+    talentTitles: optionalString(draft.talentTitles),
+    provincialAwards: optionalString(draft.provincialAwards),
     socialPartTime: optionalString(draft.socialPartTime),
     idNumber: optionalString(draft.idNumber),
     phone: optionalString(draft.phone),
@@ -289,16 +298,17 @@ function createProfileWriteInput(draft: MemberDraft) {
         role: item.role,
         name: optionalString(item.name),
         title: optionalString(item.title),
-        note: optionalString(item.note),
+        talentTitle: optionalString(item.talentTitle),
         sortOrder: index,
       })),
     },
     conversations: {
       create: draft.conversations
-        .filter((item) => hasAnyValue([item.summary, item.confusion, item.actionPlan, item.date, item.interviewer, item.attachment.url]))
+        .filter((item) => hasAnyValue([item.summary, item.confusion, item.actionPlan, item.date, item.interviewer, item.location, item.attachment.url]))
         .map((item, index) => ({
           date: toDate(item.date),
           interviewer: optionalString(item.interviewer),
+          location: optionalString(item.location),
           summary: item.summary.trim() || `谈心谈话 ${index + 1}`,
           confusion: optionalString(item.confusion),
           actionPlan: optionalString(item.actionPlan),
@@ -332,6 +342,7 @@ function serializeProfile(profile: ProfileWithRelations): MemberDraft {
     id: profile.id,
     employeeId: profile.employeeId ?? "",
     department: profile.department ?? "",
+    workspaceRole: profile.workspaceRole ?? "",
     name: profile.name,
     gender: profile.gender ?? "",
     birthDate: toDateInput(profile.birthDate),
@@ -348,6 +359,9 @@ function serializeProfile(profile: ProfileWithRelations): MemberDraft {
     highestDegree: profile.highestDegree ?? "",
     biography: profile.biography ?? "",
     talentPrograms: profile.talentPrograms ?? "",
+    majorProjects: profile.majorProjects ?? "",
+    talentTitles: profile.talentTitles ?? "",
+    provincialAwards: profile.provincialAwards ?? "",
     socialPartTime: profile.socialPartTime ?? "",
     idNumber: profile.idNumber ?? "",
     phone: profile.phone ?? "",
@@ -418,7 +432,7 @@ function serializeProfile(profile: ProfileWithRelations): MemberDraft {
       role: item.role,
       name: contactMap.get(item.role)?.name ?? "",
       title: contactMap.get(item.role)?.title ?? "",
-      note: contactMap.get(item.role)?.note ?? "",
+      talentTitle: contactMap.get(item.role)?.talentTitle ?? "",
     })),
     conversations:
       profile.conversations.length > 0
@@ -426,6 +440,7 @@ function serializeProfile(profile: ProfileWithRelations): MemberDraft {
             id: item.id,
             date: toDateInput(item.date),
             interviewer: item.interviewer ?? "",
+            location: item.location ?? "",
             summary: item.summary,
             confusion: item.confusion ?? "",
             actionPlan: item.actionPlan ?? "",

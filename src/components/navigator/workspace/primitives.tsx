@@ -12,12 +12,11 @@ import {
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
-export function HeroStat({ label, value, hint }: { label: string; value: string; hint: string }) {
+export function HeroStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border border-white/35 bg-white/82 px-3 py-2 text-slate-900 shadow-sm backdrop-blur-xl">
-      <p className="text-[10px] uppercase tracking-[0.15em] text-slate-500">{label}</p>
-      <p className="mt-1 font-heading text-xl leading-none text-[#0f4c5c]">{value}</p>
-      <p className="mt-0.5 text-[11px] text-slate-600">{hint}</p>
+    <div className="min-w-[82px] px-3 py-2 text-center">
+      <p className="whitespace-nowrap text-[10px] font-medium tracking-wide text-[#8b6a6f]">{label}</p>
+      <p className="mt-1 font-heading text-xl leading-none text-[#a6192e]">{value}</p>
     </div>
   );
 }
@@ -27,7 +26,7 @@ export function SummaryStat({ label, value, icon }: { label: string; value: stri
     <div className="rounded-[16px] border border-black/6 bg-slate-50 px-3 py-2">
       <div className="flex items-center justify-between gap-2 text-slate-500">
         <span className="text-[10px] uppercase tracking-[0.18em]">{label}</span>
-        <span className="text-[#0f4c5c] [&_svg]:size-3.5">{icon}</span>
+        <span className="text-[#a6192e] [&_svg]:size-3.5">{icon}</span>
       </div>
       <p className="mt-1.5 font-heading text-lg text-slate-900">{value}</p>
     </div>

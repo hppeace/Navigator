@@ -31,7 +31,7 @@ export function IssuesTab({
       <SectionCard
         title="发展与诉求"
         description="统一收集成员工作和发展中的诉求建议及其跟进状态。"
-        icon={<CircleAlert className="text-[#d97757]" />}
+        icon={<CircleAlert className="text-[#d94a4a]" />}
         action={
           <Button type="button" variant="outline" size="sm" onClick={() => appendListItem("issueSuggestions", createEmptyIssue("question"))}>
             <Plus />

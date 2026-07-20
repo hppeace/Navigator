@@ -36,13 +36,14 @@ export type ContactDraft = {
   role: ContactRole;
   name: string;
   title: string;
-  note: string;
+  talentTitle: string;
 };
 
 export type ConversationDraft = {
   id: string;
   date: string;
   interviewer: string;
+  location: string;
   summary: string;
   confusion: string;
   actionPlan: string;
@@ -65,6 +66,7 @@ export type MemberDraft = {
   id: string;
   employeeId: string;
   department: string;
+  workspaceRole: string;
   name: string;
   gender: string;
   birthDate: string;
@@ -81,6 +83,9 @@ export type MemberDraft = {
   highestDegree: string;
   biography: string;
   talentPrograms: string;
+  majorProjects: string;
+  talentTitles: string;
+  provincialAwards: string;
   socialPartTime: string;
   idNumber: string;
   phone: string;
@@ -128,6 +133,12 @@ export const contactRoleLabels: Record<ContactRole, string> = {
 };
 
 export const genderOptions = ["男", "女"] as const;
+
+export const workspaceRoleOptions = ["站长", "副站长", "成员"] as const;
+
+export const academicTitleOptions = ["助理研究员", "副研究员", "研究员", "副教授", "教授"] as const;
+
+export const mentorTypeOptions = ["无", "硕士生导师", "博士生导师"] as const;
 
 export const ethnicityOptions = [
   "汉族",
@@ -261,7 +272,7 @@ export function createEmptyContact(role: ContactRole): ContactDraft {
     role,
     name: "",
     title: "",
-    note: "",
+    talentTitle: "",
   };
 }
 
@@ -270,6 +281,7 @@ export function createEmptyConversation(): ConversationDraft {
     id: "",
     date: "",
     interviewer: "",
+    location: "",
     summary: "",
     confusion: "",
     actionPlan: "",
@@ -294,6 +306,7 @@ export function createBlankMemberDraft(): MemberDraft {
     id: "",
     employeeId: "",
     department: "",
+    workspaceRole: "",
     name: "",
     gender: "",
     birthDate: "",
@@ -310,6 +323,9 @@ export function createBlankMemberDraft(): MemberDraft {
     highestDegree: "",
     biography: "",
     talentPrograms: "",
+    majorProjects: "",
+    talentTitles: "",
+    provincialAwards: "",
     socialPartTime: "",
     idNumber: "",
     phone: "",

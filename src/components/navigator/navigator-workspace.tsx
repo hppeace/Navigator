@@ -9,7 +9,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 
 import { BasicInfoTab } from "@/components/navigator/workspace/basic-info-tab";
@@ -161,13 +160,14 @@ export function NavigatorWorkspace({
     name: "姓名",
     employeeId: "工号",
     department: "院系",
+    workspaceRole: "工作站身份",
     gender: "性别",
     birthDate: "出生日期",
     ethnicity: "民族",
     hometown: "籍贯",
     politicalStatus: "政治面貌",
     partyAge: "入党时间",
-    partyRole: "党內职务",
+    partyRole: "职务",
     academicTitle: "学术职称",
     mentorType: "导师类型",
     researchDirection: "研究方向",
@@ -175,7 +175,10 @@ export function NavigatorWorkspace({
     schoolEntryDate: "入校时间",
     highestDegree: "最高学历",
     biography: "个人简介",
-    talentPrograms: "人才工程",
+    talentPrograms: "入选人才项目情况",
+    majorProjects: "重点重大项目",
+    talentTitles: "人才称号",
+    provincialAwards: "省部级及以上奖项",
     socialPartTime: "社会兼职",
     idNumber: "身份证号",
     phone: "手机",
@@ -207,7 +210,7 @@ export function NavigatorWorkspace({
     },
     conversations: {
       title: "谈心谈话",
-      fields: { summary: "摘要", confusion: "困惑", actionPlan: "行动计划", interviewer: "谈话人", date: "日期" },
+      fields: { summary: "摘要", confusion: "困惑", actionPlan: "行动计划", interviewer: "谈话人", location: "谈话地点", date: "日期" },
     },
     issueSuggestions: {
       title: "发展与诉求",
@@ -582,11 +585,11 @@ export function NavigatorWorkspace({
         <div className="flex items-center justify-between">
           <div className="text-sm text-slate-600">
             登录工号：{currentEmployeeId}
-            {isAdmin && <span className="ml-2 rounded bg-[#0f4c5c] px-2 py-0.5 text-xs text-white">管理员</span>}
+            {isAdmin && <span className="ml-2 rounded bg-[#a6192e] px-2 py-0.5 text-xs text-white">管理员</span>}
           </div>
           <div className="flex items-center gap-4">
             {isAdmin && (
-              <Link href="/admin/users" className="text-sm text-[#0f4c5c] hover:underline">
+              <Link href="/admin/users" className="text-sm text-[#a6192e] hover:underline">
                 用户管理
               </Link>
             )}
@@ -602,17 +605,19 @@ export function NavigatorWorkspace({
         {/* 管理员：列表视图 */}
         {isAdmin && view === "list" && (
           <>
-            <HeroBanner
-              draft={draft}
-              draftQuestionCount={draftStats.questions}
-              globalStats={globalStats}
-            />
+            <HeroBanner globalStats={globalStats} />
 
-            <Card className="navigator-panel">
-              <CardHeader className="space-y-3">
+            <Card className="navigator-panel gap-0 overflow-hidden py-0">
+              <CardHeader className="space-y-4 border-b border-[#a6192e]/10 bg-[linear-gradient(135deg,rgba(166,25,46,0.08),rgba(255,255,255,0.96)_55%,rgba(217,74,74,0.06))] px-6 py-5">
                 <div className="flex items-center justify-between gap-2">
-                  <CardTitle className="text-lg text-slate-900">成员档案库</CardTitle>
-                  <div className="flex items-center gap-1 shrink-0">
+                  <div className="flex items-center gap-3">
+                    <span className="h-9 w-1 rounded-full bg-[#a6192e]" />
+                    <div>
+                      <CardTitle className="text-xl text-slate-900">成员档案库</CardTitle>
+                      <CardDescription className="mt-0.5 text-xs">点击成员查看详情并编辑档案</CardDescription>
+                    </div>
+                  </div>
+                  <div className="flex shrink-0 items-center gap-2">
                     <input
                       ref={fileInputRef}
                       type="file"
@@ -624,7 +629,7 @@ export function NavigatorWorkspace({
                       type="button"
                       variant="outline"
                       size="sm"
-                      className="h-7 px-2 text-xs gap-1"
+                      className="h-9 gap-1.5 rounded-xl border-[#a6192e]/15 bg-white px-3 text-xs text-[#861527] hover:bg-[#a6192e]/5"
                       disabled={importing}
                       onClick={() => fileInputRef.current?.click()}
                     >
@@ -635,7 +640,7 @@ export function NavigatorWorkspace({
                       type="button"
                       variant="outline"
                       size="sm"
-                      className="h-7 px-2 text-xs gap-1"
+                      className="h-9 gap-1.5 rounded-xl border-[#a6192e]/15 bg-white px-3 text-xs text-[#861527] hover:bg-[#a6192e]/5"
                       onClick={handleExport}
                     >
                       <Download />
@@ -644,7 +649,7 @@ export function NavigatorWorkspace({
                     <Button
                       type="button"
                       size="sm"
-                      className="h-7 px-2 text-xs gap-1 bg-[#0f4c5c] text-white hover:bg-[#0b3f4e]"
+                      className="h-9 gap-1.5 rounded-xl bg-[#a6192e] px-3 text-xs text-white shadow-[0_8px_20px_rgba(166,25,46,0.2)] hover:bg-[#861527]"
                       onClick={() => {
                         setCreateDialogOpen(true);
                         setDialogError("");
@@ -655,9 +660,8 @@ export function NavigatorWorkspace({
                     </Button>
                   </div>
                 </div>
-                <CardDescription>点击成员卡片查看详情并编辑档案。</CardDescription>
                 {importNotice && (
-                  <div className="rounded-xl border border-[#0f4c5c]/10 bg-[#0f4c5c]/5 px-3 py-2 text-xs text-[#0f4c5c]">
+                  <div className="rounded-xl border border-[#a6192e]/10 bg-[#a6192e]/5 px-3 py-2 text-xs text-[#a6192e]">
                     {importNotice}
                   </div>
                 )}
@@ -667,14 +671,14 @@ export function NavigatorWorkspace({
                     value={query}
                     onChange={(event) => setQuery(event.target.value)}
                     placeholder="搜索姓名、院系或工号"
-                    className="h-10 rounded-2xl border-black/10 bg-slate-50 pl-9"
+                    className="h-11 rounded-2xl border-[#a6192e]/12 bg-white/90 pl-10 shadow-sm focus-visible:border-[#a6192e]/40 focus-visible:ring-[#a6192e]/12"
                   />
                 </div>
               </CardHeader>
 
-              <CardContent>
+              <CardContent className="bg-[linear-gradient(180deg,#fffdfc,#fff8f6)] p-5">
                 {filteredProfiles.length > 0 ? (
-                  <div className="space-y-2">
+                  <div className="space-y-3">
                     {filteredProfiles.map((profile) => {
                       const questionCount = countOpenQuestions(profile);
                       const pending = hasPendingRequest(profile.id);
@@ -684,11 +688,11 @@ export function NavigatorWorkspace({
                           key={profile.id}
                           type="button"
                           onClick={() => handleSelectProfile(profile)}
-                          className="flex w-full items-center gap-4 rounded-xl border border-black/5 bg-white px-4 py-3 text-left transition hover:border-[#0f4c5c]/10 hover:bg-slate-50"
+                          className="group flex w-full items-center gap-4 rounded-2xl border border-[#a6192e]/8 bg-white px-5 py-4 text-left shadow-[0_5px_18px_rgba(91,20,31,0.04)] transition-all hover:-translate-y-0.5 hover:border-[#a6192e]/25 hover:shadow-[0_12px_28px_rgba(91,20,31,0.1)]"
                         >
                           {/* Red dot indicator for pending requests */}
                           <div className="relative">
-                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-[#0f4c5c] to-[#d97757] text-sm font-medium text-white">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-[#a6192e] to-[#d94a4a] text-base font-medium text-white shadow-[0_6px_16px_rgba(166,25,46,0.2)] ring-4 ring-[#a6192e]/5">
                               {(profile.name || "未")[0]}
                             </div>
                             {pending && (
@@ -699,7 +703,7 @@ export function NavigatorWorkspace({
                           {/* Profile info */}
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2">
-                              <p className="truncate font-medium text-slate-900">{profile.name || "未命名成员"}</p>
+                              <p className="truncate text-base font-medium text-slate-900 group-hover:text-[#861527]">{profile.name || "未命名成员"}</p>
                               <Badge variant="secondary" className="shrink-0">{profile.developmentStage || "未设阶段"}</Badge>
                               {pending && (
                                 <Badge variant="destructive" className="shrink-0">待审核</Badge>
@@ -710,7 +714,9 @@ export function NavigatorWorkspace({
 
                           {/* Stats */}
                           {questionCount > 0 && (
-                            <span className="text-xs text-slate-500">{questionCount} 个待跟进诉求</span>
+                            <span className="rounded-full bg-[#a6192e]/6 px-3 py-1.5 text-xs font-medium text-[#861527]">
+                              {questionCount} 个待跟进诉求
+                            </span>
                           )}
                         </button>
                       );
@@ -718,7 +724,7 @@ export function NavigatorWorkspace({
                   </div>
                 ) : (
                   <div className="rounded-[24px] border border-dashed border-black/10 bg-slate-50 p-6 text-sm text-slate-500">
-                    未找到匹配成员，可点击右上角"新建"录入新档案。
+                    未找到匹配成员，可点击右上角“新建”录入新档案。
                   </div>
                 )}
               </CardContent>
@@ -733,7 +739,7 @@ export function NavigatorWorkspace({
               <button
                 type="button"
                 onClick={handleBackToList}
-                className="flex items-center gap-1.5 text-sm text-[#0f4c5c] hover:underline"
+                className="flex items-center gap-1.5 text-sm text-[#a6192e] hover:underline"
               >
                 <ArrowLeft className="size-4" />
                 返回成员列表
@@ -747,6 +753,7 @@ export function NavigatorWorkspace({
               isPending={isPending}
               notice={notice}
               isAdmin={isAdmin}
+              onAvatarChange={(value) => updateTopLevelAttachment("avatar", value)}
               onReset={() => setDraft(cloneDraft(originalProfile ?? createBlankMemberDraft()))}
               onSave={() => persistProfile(draft, "save")}
             />
@@ -788,7 +795,6 @@ export function NavigatorWorkspace({
                   draft={draft}
                   updateField={updateField}
                   updateListItem={updateListItem}
-                  updateTopLevelAttachment={updateTopLevelAttachment}
                 />
               </TabsContent>
 

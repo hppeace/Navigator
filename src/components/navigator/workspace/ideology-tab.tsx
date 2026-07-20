@@ -51,7 +51,7 @@ export function IdeologyTab({
       <SectionCard
         title="思想培养进展"
         description="跟踪入党意愿、申请情况、发展阶段与政治理论学习。"
-        icon={<ClipboardPenLine className="text-[#d97757]" />}
+        icon={<ClipboardPenLine className="text-[#d94a4a]" />}
       >
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           <Field label="是否有入党意愿">
@@ -118,7 +118,7 @@ export function IdeologyTab({
         </div>
 
         <div className="grid gap-4 xl:grid-cols-2">
-          <Field label="政治理论学习">
+          <Field label="参加政治理论学习情况">
             <Textarea
               className="min-h-28"
               value={draft.politicalStudyNotes}
@@ -135,7 +135,7 @@ export function IdeologyTab({
         </div>
 
         <FileUploadField
-          label="思想培养佐证材料"
+          label="附件"
           value={draft.ideologyAttachment}
           onChange={(value) => updateTopLevelAttachment("ideologyAttachment", value)}
         />
@@ -143,8 +143,8 @@ export function IdeologyTab({
 
       <SectionCard
         title="谈心谈话记录"
-        description="记录联系人或成长导师的谈话要点、思想困惑与解决举措。"
-        icon={<MessagesSquare className="text-[#0f4c5c]" />}
+        description="记录谈话。"
+        icon={<MessagesSquare className="text-[#a6192e]" />}
         action={
           <Button type="button" variant="outline" size="sm" onClick={() => appendListItem("conversations", createEmptyConversation())}>
             <Plus />
@@ -159,7 +159,7 @@ export function IdeologyTab({
               title={`谈心谈话 ${index + 1}`}
               onRemove={() => removeListItem("conversations", index, createEmptyConversation, `谈心谈话 ${index + 1}`)}
             >
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-3">
                 <Field label="谈话日期">
                   <Input
                     type="date"
@@ -179,6 +179,17 @@ export function IdeologyTab({
                       updateListItem("conversations", index, (current) => ({
                         ...current,
                         interviewer: event.target.value,
+                      }))
+                    }
+                  />
+                </Field>
+                <Field label="谈话地点">
+                  <Input
+                    value={item.location}
+                    onChange={(event) =>
+                      updateListItem("conversations", index, (current) => ({
+                        ...current,
+                        location: event.target.value,
                       }))
                     }
                   />
@@ -225,7 +236,7 @@ export function IdeologyTab({
               </div>
 
               <FileUploadField
-                label="谈话附件"
+                label="附件"
                 value={item.attachment}
                 onChange={(value) =>
                   updateListItem("conversations", index, (current) => ({

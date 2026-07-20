@@ -82,8 +82,8 @@ export default function AdminUsersPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <div className="text-center">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#0f4c5c]/10 mb-4">
-            <div className="w-6 h-6 border-2 border-[#0f4c5c] border-t-transparent rounded-full animate-spin" />
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#a6192e]/10 mb-4">
+            <div className="w-6 h-6 border-2 border-[#a6192e] border-t-transparent rounded-full animate-spin" />
           </div>
           <p className="text-slate-500">加载中...</p>
         </div>
@@ -118,7 +118,7 @@ export default function AdminUsersPage() {
           </Link>
 
           <div className="flex items-center gap-4">
-            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#0f4c5c] shadow-lg shadow-[#0f4c5c]/20">
+            <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-[#a6192e] shadow-lg shadow-[#a6192e]/20">
               <UserCog className="w-7 h-7 text-white" />
             </div>
             <div>
@@ -131,8 +131,8 @@ export default function AdminUsersPage() {
         <div className="bg-white rounded-[24px] shadow-sm border border-black/5 overflow-hidden">
           <div className="px-6 py-5 border-b border-black/5 bg-slate-50/50">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-[#0f4c5c]/10 flex items-center justify-center">
-                <Shield className="w-4 h-4 text-[#0f4c5c]" />
+              <div className="w-8 h-8 rounded-lg bg-[#a6192e]/10 flex items-center justify-center">
+                <Shield className="w-4 h-4 text-[#a6192e]" />
               </div>
               <div>
                 <h2 className="font-semibold text-slate-900">账户列表</h2>
@@ -146,9 +146,9 @@ export default function AdminUsersPage() {
               <div key={user.id} className="px-6 py-5 hover:bg-slate-50/50 transition-colors">
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-4">
-                    <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${user.isAdmin ? "bg-[#0f4c5c]/10" : "bg-slate-100"}`}>
+                    <div className={`w-11 h-11 rounded-xl flex items-center justify-center ${user.isAdmin ? "bg-[#a6192e]/10" : "bg-slate-100"}`}>
                       {user.isAdmin ? (
-                        <Shield className="w-5 h-5 text-[#0f4c5c]" />
+                        <Shield className="w-5 h-5 text-[#a6192e]" />
                       ) : (
                         <div className="w-5 h-5 rounded-full bg-slate-300" />
                       )}
@@ -157,7 +157,7 @@ export default function AdminUsersPage() {
                       <div className="flex items-center gap-2">
                         <span className="font-medium text-slate-900">{user.name || "未命名"}</span>
                         {user.isAdmin && (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#0f4c5c]/10 text-[#0f4c5c]">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-[#a6192e]/10 text-[#a6192e]">
                             管理员
                           </span>
                         )}
@@ -180,13 +180,13 @@ export default function AdminUsersPage() {
                           value={newPassword}
                           onChange={(e) => setNewPassword(e.target.value)}
                           placeholder="新密码"
-                          className="w-32 h-9 rounded-xl border border-black/10 bg-slate-50 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#0f4c5c]/20 focus:border-[#0f4c5c]"
+                          className="w-32 h-9 rounded-xl border border-black/10 bg-slate-50 px-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#a6192e]/20 focus:border-[#a6192e]"
                           minLength={6}
                           autoFocus
                         />
                         <button
                           onClick={() => handleResetPassword(user.id)}
-                          className="h-9 px-4 rounded-xl bg-[#0f4c5c] text-white text-sm font-medium hover:bg-[#0d3f4f] transition-colors"
+                          className="h-9 px-4 rounded-xl bg-[#a6192e] text-white text-sm font-medium hover:bg-[#861527] transition-colors"
                         >
                           确认
                         </button>

@@ -135,7 +135,7 @@ export function MemberSidebar({
               <Button
                 type="button"
                 size="sm"
-                className="h-7 px-2 text-xs gap-1 bg-[#0f4c5c] text-white hover:bg-[#0b3f4e]"
+                className="h-7 px-2 text-xs gap-1 bg-[#a6192e] text-white hover:bg-[#861527]"
                 onClick={onCreate}
               >
                 <UserPlus />
@@ -146,7 +146,7 @@ export function MemberSidebar({
         </div>
         <CardDescription>按成员切换并编辑完整档案。</CardDescription>
         {importNotice && (
-          <div className="rounded-xl border border-[#0f4c5c]/10 bg-[#0f4c5c]/5 px-3 py-2 text-xs text-[#0f4c5c]">
+          <div className="rounded-xl border border-[#a6192e]/10 bg-[#a6192e]/5 px-3 py-2 text-xs text-[#a6192e]">
             {importNotice}
           </div>
         )}
@@ -181,8 +181,8 @@ export function MemberSidebar({
                     className={cn(
                       "w-full rounded-[24px] border px-4 py-4 text-left transition",
                       isActive
-                        ? "border-[#0f4c5c]/15 bg-[#0f4c5c]/5 shadow-[0_14px_30px_rgba(15,76,92,0.12)]"
-                        : "border-black/5 bg-white hover:border-[#0f4c5c]/10 hover:bg-slate-50",
+                        ? "border-[#a6192e]/15 bg-[#a6192e]/5 shadow-[0_14px_30px_rgba(166,25,46,0.12)]"
+                        : "border-black/5 bg-white hover:border-[#a6192e]/10 hover:bg-slate-50",
                     )}
                   >
                     <div className="flex items-start justify-between gap-3">
@@ -204,7 +204,7 @@ export function MemberSidebar({
 
                     <div className="mt-4 h-2 rounded-full bg-slate-100">
                       <div
-                        className="h-full rounded-full bg-[linear-gradient(90deg,#0f4c5c,#d97757)]"
+                        className="h-full rounded-full bg-[linear-gradient(90deg,#a6192e,#d94a4a)]"
                         style={{ width: `${completion}%` }}
                       />
                     </div>

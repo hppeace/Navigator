@@ -35,7 +35,7 @@ export function GrowthTab({
       <SectionCard
         title="活动情况记录"
         description="记录工作站活动参与、主题分享、科普活动和志愿服务。"
-        icon={<BookOpenText className="text-[#0f4c5c]" />}
+        icon={<BookOpenText className="text-[#a6192e]" />}
         collapsible
         action={
           <Button type="button" variant="outline" size="sm" onClick={() => appendListItem("activities", createEmptyActivity())}>
@@ -119,7 +119,7 @@ export function GrowthTab({
       <SectionCard
         title="关键表现记录"
         description="重点记录重大项目突破、成果转化和急难险重任务中的担当作为。"
-        icon={<FlaskConical className="text-[#d97757]" />}
+        icon={<FlaskConical className="text-[#d94a4a]" />}
         collapsible
         action={
           <Button
@@ -209,7 +209,7 @@ export function GrowthTab({
       <SectionCard
         title="职业发展记录"
         description="记录职务职称变化、人才计划和重大项目进展。"
-        icon={<BriefcaseBusiness className="text-[#0f4c5c]" />}
+        icon={<BriefcaseBusiness className="text-[#a6192e]" />}
         collapsible
         action={
           <Button type="button" variant="outline" size="sm" onClick={() => appendListItem("careerRecords", createEmptyCareer())}>
