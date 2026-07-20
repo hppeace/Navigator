@@ -42,14 +42,14 @@ export function NewMemberDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-lg overflow-hidden rounded-[30px] border border-black/5 bg-white/96 p-0 shadow-[0_24px_60px_rgba(15,23,42,0.18)]">
-        <DialogHeader className="gap-3 border-b border-black/5 bg-[linear-gradient(180deg,rgba(15,76,92,0.08),rgba(255,255,255,0.82))] px-6 py-5 pr-14">
-          <div className="flex size-11 items-center justify-center rounded-2xl bg-[#0f4c5c] text-white shadow-[0_12px_24px_rgba(15,76,92,0.18)]">
+        <DialogHeader className="gap-3 border-b border-black/5 bg-[linear-gradient(180deg,rgba(166,25,46,0.08),rgba(255,255,255,0.82))] px-6 py-5 pr-14">
+          <div className="flex size-11 items-center justify-center rounded-2xl bg-[#a6192e] text-white shadow-[0_12px_24px_rgba(166,25,46,0.18)]">
             <UserPlus className="size-5" />
           </div>
           <div className="space-y-1">
             <DialogTitle className="text-xl text-slate-900">新建成员档案</DialogTitle>
             <DialogDescription>
-              先录入成员姓名与所属院系，创建后可继续补充成长轨迹、思想动态和问题建议。
+              先录入成员姓名与所属院系，创建后可继续补充成长轨迹、思想动态和发展诉求。
             </DialogDescription>
           </div>
         </DialogHeader>
@@ -100,7 +100,7 @@ export function NewMemberDialog({
             </Button>
             <Button
               type="button"
-              className="rounded-xl bg-[#0f4c5c] text-white hover:bg-[#0b3f4e]"
+              className="rounded-xl bg-[#a6192e] text-white hover:bg-[#861527]"
               disabled={isPending}
               onClick={onSubmit}
             >

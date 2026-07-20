@@ -30,13 +30,22 @@ async function main() {
     },
   });
 
-  // Create regular user
+  // Create regular users
   const userPassword = await bcrypt.hash("user123", 10);
   await prisma.user.create({
     data: {
       employeeId: "LH2026001",
       password: userPassword,
       name: "周岚",
+      isAdmin: false,
+    },
+  });
+
+  await prisma.user.create({
+    data: {
+      employeeId: "LH2026002",
+      password: userPassword,
+      name: "宋川",
       isAdmin: false,
     },
   });
@@ -157,14 +166,16 @@ async function main() {
           {
             type: "question",
             title: "希望增加高水平学术交流资源",
-            content: "建议学校提供更稳定的国际合作访问渠道与短期交流名额。",
+            specificIssues: "缺乏国际合作访问渠道与短期交流名额。",
+            needs: "建议学校提供更稳定的国际合作访问渠道与短期交流名额。",
             status: "待跟进",
             sortOrder: 0,
           },
           {
             type: "suggestion",
             title: "增设人才家属融入支持",
-            content: "建议在工作站活动中增加家属参与场景，提升归属感。",
+            specificIssues: "工作站活动中缺少家属参与场景。",
+            needs: "建议在工作站活动中增加家属参与场景，提升归属感。",
             status: "已转交组织端",
             sortOrder: 1,
           },
@@ -249,7 +260,8 @@ async function main() {
           {
             type: "question",
             title: "需要更多实验空间协调支持",
-            content: "希望学校在高性能设备与联合实验空间方面提供支持。",
+            specificIssues: "高性能设备与联合实验空间不足。",
+            needs: "希望学校在高性能设备与联合实验空间方面提供支持。",
             status: "沟通中",
             sortOrder: 0,
           },

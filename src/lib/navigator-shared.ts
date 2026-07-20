@@ -26,6 +26,7 @@ export type CareerDraft = {
   date: string;
   title: string;
   description: string;
+  attachment: AttachmentValue;
 };
 
 export type ContactRole = "school" | "college" | "mentor";
@@ -35,12 +36,14 @@ export type ContactDraft = {
   role: ContactRole;
   name: string;
   title: string;
-  note: string;
+  talentTitle: string;
 };
 
 export type ConversationDraft = {
   id: string;
   date: string;
+  interviewer: string;
+  location: string;
   summary: string;
   confusion: string;
   actionPlan: string;
@@ -53,7 +56,8 @@ export type IssueDraft = {
   id: string;
   type: IssueType;
   title: string;
-  content: string;
+  specificIssues: string;
+  needs: string;
   status: string;
   attachment: AttachmentValue;
 };
@@ -62,6 +66,7 @@ export type MemberDraft = {
   id: string;
   employeeId: string;
   department: string;
+  workspaceRole: string;
   name: string;
   gender: string;
   birthDate: string;
@@ -78,6 +83,10 @@ export type MemberDraft = {
   highestDegree: string;
   biography: string;
   talentPrograms: string;
+  majorProjects: string;
+  talentTitles: string;
+  provincialAwards: string;
+  socialPartTime: string;
   idNumber: string;
   phone: string;
   wechat: string;
@@ -113,8 +122,8 @@ export const developmentStageOptions = [
 ] as const;
 
 export const issueTypeLabels: Record<IssueType, string> = {
-  question: "问题与困惑",
-  suggestion: "需求与建议",
+  question: "困难诉求",
+  suggestion: "发展建议",
 };
 
 export const contactRoleLabels: Record<ContactRole, string> = {
@@ -124,6 +133,12 @@ export const contactRoleLabels: Record<ContactRole, string> = {
 };
 
 export const genderOptions = ["男", "女"] as const;
+
+export const workspaceRoleOptions = ["站长", "副站长", "成员"] as const;
+
+export const academicTitleOptions = ["助理研究员", "副研究员", "研究员", "副教授", "教授"] as const;
+
+export const mentorTypeOptions = ["无", "硕士生导师", "博士生导师"] as const;
 
 export const ethnicityOptions = [
   "汉族",
@@ -207,7 +222,6 @@ export const highestDegreeOptions = [
 ] as const;
 
 export const issueStatusOptions = [
-  "待处理",
   "处理中",
   "已解决",
   "暂缓",
@@ -248,6 +262,7 @@ export function createEmptyCareer(): CareerDraft {
     date: "",
     title: "",
     description: "",
+    attachment: createBlankAttachment(),
   };
 }
 
@@ -257,7 +272,7 @@ export function createEmptyContact(role: ContactRole): ContactDraft {
     role,
     name: "",
     title: "",
-    note: "",
+    talentTitle: "",
   };
 }
 
@@ -265,6 +280,8 @@ export function createEmptyConversation(): ConversationDraft {
   return {
     id: "",
     date: "",
+    interviewer: "",
+    location: "",
     summary: "",
     confusion: "",
     actionPlan: "",
@@ -277,8 +294,9 @@ export function createEmptyIssue(type: IssueType): IssueDraft {
     id: "",
     type,
     title: "",
-    content: "",
-    status: "",
+    specificIssues: "",
+    needs: "",
+    status: "处理中",
     attachment: createBlankAttachment(),
   };
 }
@@ -288,6 +306,7 @@ export function createBlankMemberDraft(): MemberDraft {
     id: "",
     employeeId: "",
     department: "",
+    workspaceRole: "",
     name: "",
     gender: "",
     birthDate: "",
@@ -304,6 +323,10 @@ export function createBlankMemberDraft(): MemberDraft {
     highestDegree: "",
     biography: "",
     talentPrograms: "",
+    majorProjects: "",
+    talentTitles: "",
+    provincialAwards: "",
+    socialPartTime: "",
     idNumber: "",
     phone: "",
     wechat: "",
@@ -319,15 +342,15 @@ export function createBlankMemberDraft(): MemberDraft {
     democraticReviewNotes: "",
     ideologyAttachment: createBlankAttachment(),
     avatar: createBlankAttachment(),
-    activities: [createEmptyActivity()],
-    keyPerformances: [createEmptyPerformance()],
-    careerRecords: [createEmptyCareer()],
+    activities: [],
+    keyPerformances: [],
+    careerRecords: [],
     contacts: [
       createEmptyContact("school"),
       createEmptyContact("college"),
       createEmptyContact("mentor"),
     ],
-    conversations: [createEmptyConversation()],
-    issueSuggestions: [createEmptyIssue("question"), createEmptyIssue("suggestion")],
+    conversations: [],
+    issueSuggestions: [],
   };
 }

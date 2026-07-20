@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(npm -v)",
+      "Bash(curl -fsSL https://deb.nodesource.com/setup_22.x)",
+      "Bash(sudo -E bash -)",
+      "Bash(sudo apt-get install -y nodejs)",
+      "Read(//home/zjm/.volta/bin/**)",
+      "Read(//home/zjm/.fnm/**)",
+      "Read(//usr/local/bin/**)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(kill 270936)",
+      "Bash(npm run *)"
+    ]
+  }
+}

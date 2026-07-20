@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { createEmptyIssue, issueStatusOptions, issueTypeLabels, type IssueType, type MemberDraft } from "@/lib/navigator-shared";
+import { createEmptyIssue, issueStatusOptions, type MemberDraft } from "@/lib/navigator-shared";
 
 type IssuesTabProps = {
   draft: MemberDraft;
@@ -29,76 +29,62 @@ export function IssuesTab({
   return (
     <div className="space-y-6">
       <SectionCard
-        title="问题与建议"
-        description="统一收集成员工作和生活中的问题困惑、需求建议及其跟进状态。"
-        icon={<CircleAlert className="text-[#d97757]" />}
+        title="发展与诉求"
+        description="统一收集成员工作和发展中的诉求建议及其跟进状态。"
+        icon={<CircleAlert className="text-[#d94a4a]" />}
         action={
-          <div className="flex flex-wrap gap-2">
-            <Button type="button" variant="outline" size="sm" onClick={() => appendListItem("issueSuggestions", createEmptyIssue("question"))}>
-              <Plus />
-              新增问题
-            </Button>
-            <Button type="button" variant="outline" size="sm" onClick={() => appendListItem("issueSuggestions", createEmptyIssue("suggestion"))}>
-              <Plus />
-              新增建议
-            </Button>
-          </div>
+          <Button type="button" variant="outline" size="sm" onClick={() => appendListItem("issueSuggestions", createEmptyIssue("question"))}>
+            <Plus />
+            新增发展诉求
+          </Button>
         }
       >
         <div className="grid gap-4">
           {draft.issueSuggestions.map((item, index) => (
             <RecordShell
               key={`issue-${index}`}
-              title={`${issueTypeLabels[item.type]} ${index + 1}`}
-              onRemove={() => removeListItem("issueSuggestions", index, () => createEmptyIssue(item.type))}
+              title={`发展诉求 ${index + 1}`}
+              onRemove={() => removeListItem("issueSuggestions", index, () => createEmptyIssue("question"), `发展诉求 ${index + 1}`)}
             >
-              <div className="grid gap-4 md:grid-cols-3">
-                <Field label="分类">
-                  <Select
-                    value={item.type}
-                    onValueChange={(value) =>
-                      updateListItem("issueSuggestions", index, (current) => ({
-                        ...current,
-                        type: value as IssueType,
-                      }))
-                    }
-                  >
-                    <SelectTrigger className="w-full rounded-2xl border-black/10 bg-slate-50">
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="question">问题与困惑</SelectItem>
-                      <SelectItem value="suggestion">需求与建议</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </Field>
-                <Field label="标题" className="md:col-span-2">
-                  <Input
-                    value={item.title}
-                    onChange={(event) =>
-                      updateListItem("issueSuggestions", index, (current) => ({
-                        ...current,
-                        title: event.target.value,
-                      }))
-                    }
-                  />
-                </Field>
-              </div>
+              <Field label="近期发展诉求">
+                <Input
+                  value={item.title}
+                  onChange={(event) =>
+                    updateListItem("issueSuggestions", index, (current) => ({
+                      ...current,
+                      title: event.target.value,
+                    }))
+                  }
+                />
+              </Field>
+
+              <Field label="具体问题">
+                <Textarea
+                  className="min-h-20"
+                  value={item.specificIssues}
+                  onChange={(event) =>
+                    updateListItem("issueSuggestions", index, (current) => ({
+                      ...current,
+                      specificIssues: event.target.value,
+                    }))
+                  }
+                />
+              </Field>
 
               <div className="grid gap-4 lg:grid-cols-[1fr_240px]">
-                <Field label="内容">
+                <Field label="需求">
                   <Textarea
-                    className="min-h-28"
-                    value={item.content}
+                    className="min-h-20"
+                    value={item.needs}
                     onChange={(event) =>
                       updateListItem("issueSuggestions", index, (current) => ({
                         ...current,
-                        content: event.target.value,
+                        needs: event.target.value,
                       }))
                     }
                   />
                 </Field>
-                <Field label="跟进状态">
+                <Field label="推进情况">
                   <Select
                     value={item.status}
                     onValueChange={(value) =>
